@@ -1,0 +1,28 @@
+The fibonacci propgram uses callee-saved registers to preserve values. 
+
+
+Initializations:
+	1. Initially, the argument n is held in register r22. 
+	2. We set r21 to the value 1 using sbr (to faciliate addition of 1 later on).
+	3. r23 is cleared. It is used for tracking the return value of the left subtree.
+
+fib:
+	1. push r23 and r22 (save previosu values of n and the left subtree call)
+	2. r25:r24 holds the cumulative value to be returned for the current call.
+	3. Compare r22 with 1, and the 0, to decide which branch to jump to
+
+ret_0/ret_1:
+	4. Add 1 or 0 depending on the value of r22
+	5. Prior to returning, restore r22 and r23 from the stack via pops
+
+else:
+	6. n -= 1, call left subtree--f(n-1)
+	7. Save result of f(n-1) into r23 by copying from r24
+	8. n -= 1 again, call right subtree--f(n-2)
+	9. Sum r23 and r24, and then add carry bit to r25
+	10. Prior to returning, restore r22 and r23 from the stack via pops
+
+
+
+
+

@@ -1,0 +1,20 @@
+We implemented lock with a ready queue, each node of which contains the stack pointer, whether it's blocked, and the pointer to the next ready process, and a blocked queue.
+The lock_t struct holds the pointer to the locked queue and a pointer to the owner of the lock.
+
+The global variables we keep besides current_process are head and tail, which points to the head of the queue and the end of the queue. If the queue is empty, head would be NULL.
+We also keep l, which is the pointer to the lock_t.
+In process_create(), we create a linked list of process_t, mallocing space for each process_t, with head and tail assigned accordingly. We initialize the blocked field to 0 (unblocked).
+In process_start(), we simply call process_begin().
+In process_select(), if cursp is 0 and head is NULL, meaning that there's no currently running process and no ready process, we return 0.
+                     if cursp if 0 and head is not NULL,  meaning that there's no currently running process but there're ready processes, we set execute the first process in the queue by setting current_process to head.
+                     if cursp is non-zero but head is NULL, then there's only one process. We resume that process by returning cursp.
+                     if cursp is non-zero and head is non-zero, we assign head to current_process, which is the next process to exectute, and move head to its next node. Now if the previous current_process is not blocked, we append it to the end of the queue; otherwise, we will not append it.
+
+In lock_init(), we set l's owner and the head of blocked queue to NULL.
+In lock_acquire(), if owner is NULL, meaning that no process holds the lock, we set owner to current process. It remains unblocked.
+                   if owner is not NULL, then we add current process to the blocked queue and set its blocked field to 1 (blocked).
+In lock_release(), if the head of blocked queue is NULL, meaning that there's no process waiting on the lock, we set owner to NULL.
+                   if the head of blocked queue is not NULL, meaning that there're processes waiting on the lock, then we set the first process in the blocked queue to unblocked and move it to the end of the ready queue.
+
+When I write append/add X to the end of the queue, I mean the following pattern:
+If head is NULL, then we set head to X; otherwise, make tail point to X and set tail = X.

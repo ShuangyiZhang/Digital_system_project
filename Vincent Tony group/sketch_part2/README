@@ -1,0 +1,18 @@
+The main program uses caller-saved registers to preserve their values.
+
+Initally a and b are stored in r24 and r22.
+
+sumval: 1. Arguments are stored in r24 and r22
+	2. Return value is stored in r24 and r25
+	3. Registers modified: r24 and r25
+	4. No stack manipulation within function
+Everytime before calling sumval, push r24 and r25.
+
+diffval: 1. Arguments are stored in r24 and r22
+	 2. Return value is stored in r24, because the result can fit into a 8-bit register
+	 3. Registers modified: r24 and r22
+	 4. No stack manipulation within function
+
+Everytime before calling sumval, push r24 and r22.
+
+The main program stores output value in r21 and r20.

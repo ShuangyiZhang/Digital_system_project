@@ -1,0 +1,96 @@
+Having 2 instances of #include <Adafruit_GFX.h> caused multiple definitions error
+
+Having the adafruit_SSD1306 library installed even without including it caused multiple definitions error, so I had to remove it ( rm -rf ~/Documents/Arduino/libraries/Adafruit_SSD1306)
+
+Removing portreg slows down the ball by quite a bit 
+
+This is actually hardware SPI? I deleted all the software ones and this is the one that remains 
+
+
+The one I'm using:
+
+/*!
+    @brief  Constructor for SPI SSD1306 displays, using native hardware SPI.
+    @param  w
+            Display width in pixels
+    @param  h
+            Display height in pixels
+    @param  spi
+            Pointer to an existing SPIClass instance (e.g. &SPI, the
+            microcontroller's primary SPI bus).
+    @param  dc_pin
+            Data/command pin (using Arduino pin numbering), selects whether
+            display is receiving commands (low) or data (high).
+    @param  rst_pin
+            Reset pin (using Arduino pin numbering), or -1 if not used
+            (some displays might be wired to share the microcontroller's
+            reset pin).
+    @param  cs_pin
+            Chip-select pin (using Arduino pin numbering) for sharing the
+            bus with other devices. Active low.
+    @param  bitrate
+            SPI clock rate for transfers to this display. Default if
+            unspecified is 8000000UL (8 MHz).
+    @return Adafruit_SSD1306 object.
+    @note   Call the object's begin() function before use -- buffer
+            allocation is performed there!
+*/
+
+/*!
+    @brief  Destructor for Adafruit_SSD1306 object.
+*/
+
+
+Removed This:
+
+#if defined(ESP8266)
+  // ESP8266 needs a periodic yield() call to avoid watchdog reset.
+  // With the limited size of SSD1306 displays, and the fast bitrate
+  // being used (1 MHz or more), I think one yield() immediately before
+  // a screen write and one immediately after should cover it.  But if
+  // not, if this becomes a problem, yields() might be added in the
+  // 32-byte transfer condition below.
+  yield();
+#endif
+
+
+
+
+
+// ALLOCATE & INIT DISPLAY -------------------------------------------------
+
+/*!
+    @brief  Allocate RAM for image buffer, initialize peripherals and pins.
+    @param  vcs
+            VCC selection. Pass SSD1306_SWITCHCAPVCC to generate the display
+            voltage (step up) from the 3.3V source, or SSD1306_EXTERNALVCC
+            otherwise. Most situations with Adafruit SSD1306 breakouts will
+            want SSD1306_SWITCHCAPVCC.
+    @param  addr
+            I2C address of corresponding SSD1306 display (or pass 0 to use
+            default of 0x3C for 128x32 display, 0x3D for all others).
+            SPI displays (hardware or software) do not use addresses, but
+            this argument is still required (pass 0 or any value really,
+            it will simply be ignored). Default if unspecified is 0.
+    @param  reset
+            If true, and if the reset pin passed to the constructor is
+            valid, a hard reset will be performed before initializing the
+            display. If using multiple SSD1306 displays on the same bus, and
+            if they all share the same reset pin, you should only pass true
+            on the first display being initialized, false on all others,
+            else the already-initialized displays would be reset. Default if
+            unspecified is true.
+    @param  periphBegin
+            If true, and if a hardware peripheral is being used (I2C or SPI,
+            but not software SPI), call that peripheral's begin() function,
+            else (false) it has already been done in one's sketch code.
+            Cases where false might be used include multiple displays or
+            other devices sharing a common bus, or situations on some
+            platforms where a nonstandard begin() function is available
+            (e.g. a TwoWire interface on non-default pins, as can be done
+            on the ESP8266 and perhaps others).
+    @return true on successful allocation/init, false otherwise.
+            Well-behaved code should check the return value before
+            proceeding.
+    @note   MUST call this function before any drawing or updates!
+*/

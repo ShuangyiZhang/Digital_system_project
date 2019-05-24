@@ -1,0 +1,12 @@
+We implemented concurrency with a ready queue, each node of which contains the stack pointer and the pointer to the next ready process.
+The global variables we keep besides current_process are head and tail, which points to the head of the queue and the end of the queue. If the queue is empty, head would be NULL.
+In process_create(), we create a linked list of process_t, mallocing space for each process_t, with head and tail assigned accordingly.
+In process_start(), we simply call process_begin().
+In process_select(), if cursp is 0 and head is NULL, meaning that there's no currently running process and no ready process, we return 0.
+                     if cursp if 0 and head is not NULL,  meaning that there's no currently running process but there're ready processes, we set execute the first process in the queue by setting current_process to head.
+                     if cursp is non-zero but head is NULL, then there's only one process. We resume that process by returning cursp.
+                     if cursp is non-zero and head is non-zero, we assign head to current_process, which is the next process to exectute, and also append the previous current_process to the end of the queue, and move head to its next node.
+
+
+When I write append/add X to the end of the queue, I mean the following pattern:
+If head is NULL, then we set head to X; otherwise, make tail point to X and set tail = X.

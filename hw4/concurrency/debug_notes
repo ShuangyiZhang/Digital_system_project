@@ -1,0 +1,8 @@
+Arduino was launching from my downloads folder previously, had to drag into applications to match the path rajit specified. 
+
+
+"patching file wiring.c
+patch unexpectedly ends in middle of line
+Hunk #2 succeeded at 63 with fuzz 1."
+
+For extern variable, after declaration in the .h file, still need to declare it once in the .c file. 

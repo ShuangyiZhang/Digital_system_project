@@ -1,0 +1,15 @@
+Explanation:
+
+
+Part1: 
+
+We run 3 processes concurrently. Each is responsible for lighting up one row of the LED matrix. P1 lights up 1 second then delays 1 second,
+P2 lights up 2 second then delays 2 seconds, and P3 lights up 4 second then delays 4 seconds. You can watch the video to see that the rows are controlled synchronously.
+
+
+
+Part2:
+
+This is similar to part 1, except with locks at each iteration of the while loops. Only one row of the LED lights up at once. 
+
+
